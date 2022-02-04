@@ -63,7 +63,8 @@ def update_state(state_id):
             return jsonify('Not a JSON'), 400
         dict_req = request.get_json()
         if storage.get(State, state_id) is not None:
-            storage.get(State, state_id).name = dict_req['name']
-            storage.get(State, state_id).save()
-            return jsonify(storage.get(State, state_id).to_dict()), 200
+            if 'name' in dict_req:
+                storage.get(State, state_id).name = dict_req['name']
+                storage.get(State, state_id).save()
+                return jsonify(storage.get(State, state_id).to_dict()), 200
         abort(404)

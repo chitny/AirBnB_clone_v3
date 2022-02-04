@@ -4,8 +4,6 @@
 from api.v1.views import app_views
 from flask import Flask
 from models import storage
-from models.state import State
-from models.city import City
 from models.amenity import Amenity
 from flask import jsonify, request, abort
 
@@ -42,7 +40,7 @@ def delete_one_amenity(amenity_id):
         abort(404)
 
 
-@app_views.route('/amenities/', methods=['POST'], strict_slashes=False)
+@app_views.route('/amenities', methods=['POST'], strict_slashes=False)
 def create_new_amenity():
     """ Creates a Amenity: POST /api/v1/amenities """
     if request.method == 'POST':

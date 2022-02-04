@@ -9,21 +9,15 @@ from models.state import State
 from flask import jsonify, request, abort
 
 
-@app_views.route('/states/<state_id>/cities', methods=['GET'])
+@app_views.route('/states/<state_id>/cities', methods=['GET'],
+                 strict_slashes=False)
 def cities_by_state_id(state_id):
-    """ Retrieves the list of all City objects of a State: GET /api/v1/states/<state_id>/cities """
-    if storage.get(State, state_id) is not None:
-        li_cities = storage.all(City).values()
-        for ci in li_cities:
-            ci.to_dict()
-        return jsonify(li_cities)
-    abort(404)
-"""
-@app_views.route('/states/', methods=['GET'])
-def retrieve_list_all_states():
+    """ Retrieves the list of all City objects of a State """
     if request.method == 'GET':
-        list_all_storage = []
-        for st in storage.all(State).values():
-            list_all_storage.append(st.to_dict())
-        return jsonify(list_all_storage)
-"""
+        if storage.get(State, state_id) is not None:
+            cities = []
+            for ci in storage.all(City).values():
+                if ci.state_id == state_id:
+                    cities.append(ci.to_dict())
+            return jsonify(cities)
+        abort(404)

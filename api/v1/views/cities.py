@@ -21,3 +21,24 @@ def cities_by_state_id(state_id):
                     cities.append(ci.to_dict())
             return jsonify(cities)
         abort(404)
+
+
+@app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
+def retrieve_one_city(city_id):
+    """ Retrieves a City object. : GET /api/v1/cities/<city_id> """
+    if request.method == 'GET':
+        if storage.get(City, city_id) is not None:
+            return jsonify(storage.get(City, city_id).to_dict())
+        abort(404)
+
+
+@app_views.route('/cities/<city_id>', methods=['DELETE'],
+                 strict_slashes=False)
+def delete_one_city(city_id):
+    """ Deletes a City object: DELETE /api/v1/cities/<city_id> """
+    if request.method == 'DELETE':
+        if storage.get(City, city_id) is not None:
+            storage.delete(storage.get(City, city_id))
+            storage.save()
+            return jsonify({}), 200
+        abort(404)

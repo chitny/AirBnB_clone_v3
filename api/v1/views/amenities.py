@@ -16,3 +16,25 @@ def retrieve_list_all_amenities():
         for am in storage.all(Amenity).values():
             list_all_storage.append(am.to_dict())
         return jsonify(list_all_storage)
+
+
+@app_views.route('/amenities/<amenity_id>', methods=['GET'],
+                 strict_slashes=False)
+def retrieve_one_amenity(amenity_id):
+    """ Retrieves a Amenity object: GET /api/v1/states/<state_id> """
+    if request.method == 'GET':
+        if storage.get(Amenity, amenity_id) is not None:
+            return jsonify(storage.get(Amenity, amenity_id).to_dict())
+        abort(404)
+
+
+@app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
+                 strict_slashes=False)
+def delete_one_amenity(amenity_id):
+    """ Deletes a State object:: DELETE /api/v1/states/<state_id> """
+    if request.method == 'DELETE':
+        if storage.get(Amenity, amenity_id) is not None:
+            storage.delete(storage.get(Amenity, amenity_id))
+            storage.save()
+            return jsonify({}), 200
+        abort(404)

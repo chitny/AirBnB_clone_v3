@@ -7,7 +7,6 @@ from flask import Flask
 from models import storage
 from api.v1.views import app_views
 from os import getenv
-from flask import jsonify
 
 
 app = Flask(__name__)
@@ -23,7 +22,7 @@ def teardown(self):
 @app.errorhandler(404)
 def page_not_found(e):
     """ note that we set the 404 status explicitly """
-    return {"error":"Not found"}
+    return {"error" : "Not found"}
 
 
 if __name__ == "__main__":

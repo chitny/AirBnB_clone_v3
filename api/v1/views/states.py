@@ -5,6 +5,7 @@ from api.v1.views import app_views
 from flask import Flask
 from models import storage
 from models.state import State
+from models.city import City
 from flask import jsonify, request, abort
 
 
@@ -32,10 +33,9 @@ def delete_one_state(state_id):
     """ Deletes a State object:: DELETE /api/v1/states/<state_id> """
     if request.method == 'DELETE':
         if storage.get(State, state_id) is not None:
-            # antes de eliminar un State, hay que eliminar sus cities
             storage.delete(storage.get(State, state_id))
             storage.save()
-            return {}, 200
+            return jsonify({}), 200
         abort(404)
 
 

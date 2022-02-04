@@ -38,3 +38,35 @@ def delete_one_amenity(amenity_id):
             storage.save()
             return jsonify({}), 200
         abort(404)
+
+
+@app_views.route('/amenities/', methods=['POST'], strict_slashes=False)
+def create_new_amenity():
+    """ Creates a State: POST /api/v1/states """
+    if request.method == 'POST':
+        req_type = request.headers.get('Content-Type')
+        if req_type != 'application/json':
+            return jsonify('Not a JSON'), 400
+        dict_req_name = request.get_json()
+        if 'name' not in dict_req_name:
+            return jsonify('Missing name'), 400
+        new_obj_Amenity = Amenity(**dict_req_name)
+        new_obj_Amenity.save()
+        return jsonify(new_obj_Amenity.to_dict()), 201
+
+
+@app_views.route('/amenities/<amenity_id>', methods=['PUT'],
+                 strict_slashes=False)
+def update_amenity(amenity_id):
+    """ Updates a State object: PUT /api/v1/states/<state_id> """
+    if request.method == 'PUT':
+        req_type = request.headers.get('Content-Type')
+        if req_type != 'application/json':
+            return jsonify('Not a JSON'), 400
+        dict_req = request.get_json()
+        if storage.get(Amenity, amenity_id) is not None:
+            if 'name' in dict_req:
+                storage.get(Amenity, amenity_id).name = dict_req['name']
+                storage.get(Amenity, amenity_id).save()
+                return jsonify(storage.get(Amenity, amenity_id).to_dict()), 200
+        abort(404)

@@ -154,8 +154,15 @@ EOF  all  create  destroy  help  quit  show  update
 No known bugs at this time. 
 
 ## Authors
+<<<<<<< HEAD
 Marcelo Arbiza - [Github](https://github.com/marceloarbiza)  
 Ignacio Chitnisky - [Github](https://github.com/chitny)
+=======
+Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twitter.com/alexa_orrico)  
+Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)
+Ignacio Chitnisky
+Marcelo Arbiza
+>>>>>>> 2605691b2f6e309e8cad13057bb0e568bfb676e7
 
 Second part of Airbnb: Joann Vuong
 ## License

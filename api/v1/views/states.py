@@ -40,5 +40,30 @@ def delete_one_state(state_id):
 
 
 @app_views.route('/states/', methods=['POST'])
-def create_new_state(state_id):
+def create_new_state():
     """ Creates a State: POST /api/v1/states """
+    if request.method == 'POST':
+        req_type = request.headers.get('Content-Type')
+        if req_type != 'application/json':
+            return jsonify('Not a JSON'), 400
+        dict_req_name = request.get_json()
+        if 'name' not in dict_req_name:
+            return jsonify('Missing name'), 400
+        new_obj_State = State(**dict_req_name)
+        new_obj_State.save()
+        return jsonify(new_obj_State.to_dict()), 201
+
+
+@app_views.route('/states/<state_id>', methods=['PUT'])
+def update_state(state_id):
+    """ Updates a State object: PUT /api/v1/states/<state_id> """
+    if request.method == 'PUT':
+        req_type = request.headers.get('Content-Type')
+        if req_type != 'application/json':
+            return jsonify('Not a JSON'), 400
+        dict_req = request.get_json()
+        if storage.get(State, state_id) is not None:
+            storage.get(State, state_id).name = dict_req['name']
+            storage.get(State, state_id).save()
+            return jsonify(storage.get(State, state_id).to_dict()), 200
+        abort(404)

@@ -10,7 +10,7 @@ from models.amenity import Amenity
 from flask import jsonify, request, abort
 
 
-@app_views.route('//menities', methods=['GET'], strict_slashes=False)
+@app_views.route('/amenities/', methods=['GET'], strict_slashes=False)
 def retrieve_list_all_amenities():
     """ Retrieves the list of all Amenity objects: GET /api/v1/amenities """
     if request.method == 'GET':

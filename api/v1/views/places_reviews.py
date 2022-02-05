@@ -9,10 +9,9 @@ from models.review import Review
 from models.user import User
 
 
-@app_views.route('/places/<place_id>/reviews', methods=['GET'],
-                 strict_slashes=False)
+@app_views.route('/places/<place_id>/reviews', methods=['GET', 'POST'])
 def get_reviews(place_id):
-    """ Retrieves the list of all Review objects of a Place """
+    """get all Review objects from place_id"""
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
@@ -24,16 +23,8 @@ def get_reviews(place_id):
             if review.place_id == place_id:
                 place_reviews.append(review.to_dict())
         return jsonify(place_reviews)
-
-
-@app_views.route('/places/<place_id>/reviews', methods=['POST'],
-                 strict_slashes=False)
-def create_new_review(review_id):
-    """ Creates a Review: POST /api/v1/places/<place_id>/reviews """
-    place = storage.get(Place, place_id)
-    if not place:
-        abort(404)
-    if request.method == 'POST':
+    else:
+        """creates a new Review object"""
         content_type = request.headers.get('Content-Type')
         if (content_type != 'application/json'):
             return jsonify("Not a JSON"), 400
@@ -52,24 +43,16 @@ def create_new_review(review_id):
         return jsonify(new_review.to_dict()), 201
 
 
-@app_views.route('/reviews/<review_id>', methods=['GET'], strict_slashes=False)
-def retrieve_one_review(review_id):
-    """ Retrieves a Review object. : GET /api/v1/reviews/<review_id> """
+@app_views.route('/reviews/<review_id>', methods=['GET', 'PUT', 'DELETE'])
+def get_review(review_id):
+    """get Review by id"""
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
     if request.method == 'GET':
         """display one Review by id"""
         return jsonify(review.to_dict())
-
-
-@app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
-def update_review(review_id):
-    """ Updates a Review object: PUT /api/v1/reviews/<review_id> """
-    review = storage.get(Review, review_id)
-    if not review:
-        abort(404)
-    if request.method == 'PUT':
+    elif request.method == 'PUT':
         """updates one Review by id"""
         content_type = request.headers.get('Content-Type')
         if (content_type != 'application/json'):
@@ -81,16 +64,7 @@ def update_review(review_id):
         except Exception as e:
             print(e)
         return jsonify(review.to_dict()), 200
-
-
-@app_views.route('/reviews/<review_id>', methods=['DELETE'],
-                 strict_slashes=False)
-def delete_one_review(review_id):
-    """ Deletes a Review object: DELETE /api/v1/reviews/<review_id> """
-    review = storage.get(Review, review_id)
-    if not review:
-        abort(404)
-    if request.method == 'DELETE':
+    else:
         """deletes Review object by id"""
         storage.delete(review)
         storage.save()

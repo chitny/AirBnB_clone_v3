@@ -9,7 +9,7 @@ from models.review import Review
 from models.user import User
 
 
-@app_views.route('/places/<place_id>/reviews', methods=['GET', 'POST'])
+@app_views.route('/places/<place_id>/reviews', methods=['GET'])
 def get_reviews(place_id):
     """get all Review objects from place_id"""
     place = storage.get(Place, place_id)

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""All Review CRUD operations"""
+""" RESTFul Api - Review """
 
 from flask import jsonify, abort, request
 from api.v1.views import app_views
@@ -11,12 +11,11 @@ from models.user import User
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET'])
 def get_reviews(place_id):
-    """get all Review objects from place_id"""
+    """ Retrieves the list of all Review objects of a Place """
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
     if request.method == 'GET':
-        """displays all Reviews by place_id"""
         all_reviews = storage.all(Review).values()
         place_reviews = []
         for review in all_reviews:
@@ -27,7 +26,7 @@ def get_reviews(place_id):
 
 @app_views.route('/places/<place_id>/reviews', methods=['POST'])
 def post_reviews(place_id):
-    """get all Review objects from place_id"""
+    """ Creates a Review: POST /api/v1/places/<place_id>/reviews """
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
@@ -52,23 +51,21 @@ def post_reviews(place_id):
 
 @app_views.route('/reviews/<review_id>', methods=['GET'])
 def get_review_id(review_id):
-    """get Review by id"""
+    """ Retrieves a Review object. : GET /api/v1/reviewq/<review_id """
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
     if request.method == 'GET':
-        """display one Review by id"""
         return jsonify(review.to_dict())
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'])
 def put_review(review_id):
-    """get Review by id"""
+    """  Updates a Review object: PUT /api/v1/reviewa/<review_id> """
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
     if request.method == 'PUT':
-        """updates one Review by id"""
         content_type = request.headers.get('Content-Type')
         if (content_type != 'application/json'):
             return jsonify("Not a JSON"), 400
@@ -83,12 +80,11 @@ def put_review(review_id):
 
 @app_views.route('/reviews/<review_id>', methods=['DELETE'])
 def delete_review(review_id):
-    """get Review by id"""
+    """ Deletes a Review object: DELETE /api/v1/reviews/<review_id> """
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
     if request.method == 'DELETE':
-        """deletes Review object by id"""
         storage.delete(review)
         storage.save()
         return jsonify({}), 200

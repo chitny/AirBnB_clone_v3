@@ -50,8 +50,8 @@ def post_reviews(place_id):
         return jsonify(new_review.to_dict()), 201
 
 
-@app_views.route('/reviews/<review_id>', methods=['GET', 'PUT', 'DELETE'])
-def get_review(review_id):
+@app_views.route('/reviews/<review_id>', methods=['GET'])
+def get_review_id(review_id):
     """get Review by id"""
     review = storage.get(Review, review_id)
     if not review:
@@ -59,7 +59,15 @@ def get_review(review_id):
     if request.method == 'GET':
         """display one Review by id"""
         return jsonify(review.to_dict())
-    elif request.method == 'PUT':
+
+
+@app_views.route('/reviews/<review_id>', methods=['PUT'])
+def put_review(review_id):
+    """get Review by id"""
+    review = storage.get(Review, review_id)
+    if not review:
+        abort(404)
+    if request.method == 'PUT':
         """updates one Review by id"""
         content_type = request.headers.get('Content-Type')
         if (content_type != 'application/json'):
@@ -71,7 +79,15 @@ def get_review(review_id):
         except Exception as e:
             print(e)
         return jsonify(review.to_dict()), 200
-    else:
+
+
+@app_views.route('/reviews/<review_id>', methods=['DELETE'])
+def delete_review(review_id):
+    """get Review by id"""
+    review = storage.get(Review, review_id)
+    if not review:
+        abort(404)
+    if request.method == 'DELETE':
         """deletes Review object by id"""
         storage.delete(review)
         storage.save()

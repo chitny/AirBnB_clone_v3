@@ -83,6 +83,6 @@ def update_review(review_id):
         if review is not None:
             if 'text' in dict_req:
                 review.text = dict_req['text']
-            storage.save()
-            return jsonify(review.to_dict()), 200
+                storage.save()
+                return jsonify(review.to_dict()), 200
         abort(404)

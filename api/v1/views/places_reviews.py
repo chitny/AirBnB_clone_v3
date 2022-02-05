@@ -64,8 +64,8 @@ def create_new_review(review_id):
                 if 'text' not in dict_req:
                     return jsonify('Missing text'), 400
                 new_obj_Review = Review(**dict_req)
-                new_obj_Review.place_id = place_id
                 new_obj_Review.user_id = dict_req['user_id']
+                new_obj_Review.place_id = place_id
                 new_obj_Review.save()
                 return jsonify(new_obj_Review.to_dict()), 201
         abort(404)
@@ -76,13 +76,15 @@ def update_review(review_id):
     """ Updates a Review object: PUT /api/v1/reviews/<review_id> """
     if request.method == 'PUT':
         review = storage.get(Review, review_id)
+        if not review:
+            abort(404)
         req_type = request.headers.get('Content-Type')
         if req_type != 'application/json':
             return jsonify('Not a JSON'), 400
         dict_req = request.get_json()
-        if review is not None:
-            if 'text' in dict_req:
-                review.text = dict_req['text']
-                storage.save()
-                return jsonify(review.to_dict()), 200
-        abort(404)
+        try:
+            review.text = dict_req['text']
+            storage.save()
+        except Exception as e:
+            print(e)
+        return jsonify(review.to_dict()), 200

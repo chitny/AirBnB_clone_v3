@@ -23,8 +23,15 @@ def get_reviews(place_id):
             if review.place_id == place_id:
                 place_reviews.append(review.to_dict())
         return jsonify(place_reviews)
-    else:
-        """creates a new Review object"""
+
+
+@app_views.route('/places/<place_id>/reviews', methods=['POST'])
+def post_reviews(place_id):
+    """get all Review objects from place_id"""
+    place = storage.get(Place, place_id)
+    if not place:
+        abort(404)
+    if request.method == 'POST':
         content_type = request.headers.get('Content-Type')
         if (content_type != 'application/json'):
             return jsonify("Not a JSON"), 400
